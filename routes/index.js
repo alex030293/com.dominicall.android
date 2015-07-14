@@ -27,7 +27,7 @@ router.post('/call', function(request, response) {
             console.log(e);
         }
         console.log('[CALL] - ' + from + ' -> ' + queueTo);
-        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
     }else {
 
         console.log('[CALL] - ' + from + ' -> ' + to);
