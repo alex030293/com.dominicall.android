@@ -22,7 +22,7 @@ router.post('/call', function(request, response) {
         console.log(global.queue[from]);
         var queueTo = global.queue[from].to;
         try{
-            delete global.queue[from];
+            global.queue[from] = undefined;
         }catch(e){
             console.log(e);
         }
