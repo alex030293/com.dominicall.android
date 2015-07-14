@@ -17,6 +17,14 @@ router.post('/call', function(request, response) {
     var from = request.body.From;
     var to = request.body.To;
 
+
+    if(global.queue[from]){
+        console.log("[QUEUE]    found call in queue:");
+        console.log(global.queue[from]);
+        global.queue[from] = undefined;
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+global.queue[from].to+'</Dial></Response>');
+    }
+
     console.log('[CALL] - '+from + ' -> ' + to);
     var res = "";
 

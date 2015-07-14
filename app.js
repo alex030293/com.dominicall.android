@@ -8,6 +8,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api/0.1/call');
 
+global.queue = {};
+
 var app = express();
 
 // view engine setup
