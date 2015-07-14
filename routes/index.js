@@ -20,10 +20,10 @@ router.post('/call', function(request, response) {
     if(global.queue[from]){
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
-        var to2 = global.queue[from].to;
+        var queueTo = global.queue[from].to;
         global.queue[from] = undefined;
-        console.log('[CALL] - ' + from + ' -> ' + to2);
-        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ to2 +'</Dial></Response>');
+        console.log('[CALL] - ' + from + ' -> ' + queueTo);
+        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
     }else {
 
         console.log('[CALL] - ' + from + ' -> ' + to);
