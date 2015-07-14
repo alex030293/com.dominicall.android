@@ -1,13 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
-var morgan = require('morgan');
-var bodyParser = require('body-parser');
-var twilio = require('twilio');
-var config = require("../config");
+var config = require('./api/0.1/config');
 
 // Configure appplication routes
 
+//Remove globals, send number in post
 var fromNumber;
 
 router.get('/', function(request, response) {
@@ -47,7 +44,7 @@ router.post('/call', function(request, response) {
         res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+18299226595</Dial></Response>');
     }else if(to === "+18299479006") {
         res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+34603847010</Dial></Response>');
-    }else if (allowed.indexOf(from) > -1){
+    }else if (config.whitelist.indexOf(from) > -1){
         //read number.
         res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makecall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
     } else{
@@ -68,11 +65,6 @@ router.post('/makecall', function(request, response) {
     }else{
         response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+fromNumber+'">'+request.body.Digits+'</Dial></Response>');
     }
-});
-
-//Android endpoint
-router.post('/android',  function(req, res) {
-    res.end(200, "Hue!");
 });
 
 module.exports = router;
