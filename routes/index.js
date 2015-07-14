@@ -17,13 +17,13 @@ router.post('/call', function(request, response) {
     var from = request.body.From;
     var to = request.body.To;
 
-
     if(global.queue[from]){
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
+        var to2 = global.queue[from].to;
         global.queue[from] = undefined;
-        console.log('[CALL] - ' + from + ' -> ' + global.queue[from].to);
-        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+global.queue[from].to+'</Dial></Response>');
+        console.log('[CALL] - ' + from + ' -> ' + to2);
+        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ to2 +'</Dial></Response>');
     }else {
 
         console.log('[CALL] - ' + from + ' -> ' + to);
