@@ -22,25 +22,26 @@ router.post('/call', function(request, response) {
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
         global.queue[from] = undefined;
-        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+global.queue[from].to+'</Dial></Response>');
+        response.end('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+global.queue[from].to+'</Dial></Response>');
+    }else {
+
+        console.log('[CALL] - ' + from + ' -> ' + to);
+        var res = "";
+
+        //international forwarding
+        if (to === "+34911980567") {
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+18299226595</Dial></Response>');
+        } else if (to === "+18299479006") {
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+34603847010</Dial></Response>');
+        } else if (config.whitelist.indexOf(from) > -1) {
+            //read number.
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makecall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
+        } else {
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="woman" language="es-es">No puedes hacer llamadas desde este número.</Say></Response>');
+        }
+
+        response.send(res);
     }
-
-    console.log('[CALL] - '+from + ' -> ' + to);
-    var res = "";
-
-    //international forwarding
-    if(to === "+34911980567") {
-        res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+18299226595</Dial></Response>');
-    }else if(to === "+18299479006") {
-        res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+34603847010</Dial></Response>');
-    }else if (config.whitelist.indexOf(from) > -1){
-        //read number.
-        res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makecall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
-    } else{
-        res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="woman" language="es-es">No puedes hacer llamadas desde este número.</Say></Response>');
-    }
-
-    response.send(res);
 
 });
 
