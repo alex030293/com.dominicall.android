@@ -28,7 +28,7 @@ router.post('/call', function(request, response) {
             console.log("[ERROR]    "+from+"not dequeued");
         }
         console.log('[CALL] - ' + from + ' -> ' + queueTo);
-        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
     }else {
 
         console.log('[CALL] - ' + from + ' -> ' + to);
@@ -36,12 +36,12 @@ router.post('/call', function(request, response) {
 
         //international forwarding
         if (to === "+34911980567") {
-            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+18299226595</Dial></Response>');
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="+18299479006">+18299226595</Dial></Response>');
         } else if (to === "+18299479006") {
-            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="+18299479006">+34603847010</Dial></Response>');
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="+18299479006">+34603847010</Dial></Response>');
         } else if (config.whitelist.indexOf(from) > -1) {
             //read number.
-            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makecall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
+            res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makeCall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
         } else {
             res = ('<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="woman" language="es-es">No puedes hacer llamadas desde este número.</Say></Response>');
         }
@@ -52,15 +52,21 @@ router.post('/call', function(request, response) {
 });
 
 // Return TwiML instuctions for the outbound call
-router.post('/makecall', function(request, response) {
+router.post('/makeCall', function(request, response) {
     console.log(request.body.Digits);
     console.log("Got " + request.body.Digits.length + " digits.");
     if(request.body.Digits.length < 12){
         console.log("Not enough, repeat");
-        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makecall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">El número no es válido. Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Gather action="/makeCall" numDigits="13" timeout="20"><Say voice="woman" language="es-es">El número no es válido. Marca el número de teléfono al que quieres llamar con su código de país.</Say></Gather></Response>');
     }else{
-        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+fromNumber+'">'+request.body.Digits+'</Dial></Response>');
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="'+fromNumber+'">'+request.body.Digits+'</Dial></Response>');
     }
+});
+
+router.post('/endCall', function(request, response) {
+    console.log("[CALL] ended");
+    console.log(request.body);
+    response.status(200).end();
 });
 
 module.exports = router;

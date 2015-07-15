@@ -4,7 +4,6 @@ var router = express.Router();
 //DAO
 var callDAO = require('./../../../lib/model/callDAO');
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
     res.status(501).send('dominicall API :)');
 });
@@ -20,6 +19,8 @@ router.post('/enqueue',  function(req, res) {
         from: from,
         to: to
     };
+
+    console.log(global.queue);
 
     (global.queue[from])
     ? res.status(200).send("[ENQUEUED]    "+from+" -> "+ to+" (userId: "+userId+")\n").end()
