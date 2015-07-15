@@ -63,20 +63,20 @@ router.post('/endCall', function(req, res) {
 
     var Call = Parse.Object.extend("Call");
     var call = new Call();
+
     call.set("status",   req.body.DialCallStatus);
-
-    var user = new Parse.User();
-    user.id = global.queue[req.body.From].id;
-
-    call.set("from",  user);
     call.set("to",  global.queue[req.body.From].to);
-
     call.set("fromCountry",  req.body.fromCountry);
     call.set("toCountry",  req.body.toCountry);
     call.set("callSid", req.body.CallSid);
     call.set("deleted", false);
 
+    console.log("doing user");
+    var user = new Parse.User();
+    user.id = global.queue[req.body.From].id;
+    call.set("from",  user);
 
+    console.log("done user");
     call.save(null, {
         success: function(call) {
             // Execute any logic that should take place after the object is saved.
