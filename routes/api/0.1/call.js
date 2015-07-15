@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 //DAO
-//var callDAO = require('./../../../lib/model/callDAO');
+var callDAO = require('./../../../lib/model/callDAO');
 
 router.get('/', function(req, res, next) {
     res.status(501).send('dominicall API :)');
