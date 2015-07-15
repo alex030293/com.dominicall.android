@@ -24,11 +24,11 @@ router.post('/call', function(request, response) {
     if(global.queue[from]){
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
-        console.log('[CALL] - ' + from + ' -> ' + global.queue[from].to);
+        console.log('[CALL]     ' + from + ' -> ' + global.queue[from].to);
         response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="'+from+'">'+ global.queue[from].to +'</Dial></Response>');
     }else {
 
-        console.log('[CALL] - ' + from + ' -> ' + to);
+        console.log('[CALL]     ' + from + ' -> ' + to);
         var res = "";
 
         //international forwarding
@@ -61,7 +61,7 @@ router.post('/makeCall', function(request, response) {
 });
 
 router.post('/endCall', function(req, res) {
-    console.log("[CALL] ended");
+    console.log("[CALL]     ended");
 
     var User = Parse.Object.extend("User");
     var query = new Parse.Query(User);
