@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var config = require('./../config');
+var Parse = require('parse').Parse;
 
 // Configure appplication routes
 
