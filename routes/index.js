@@ -64,21 +64,27 @@ router.post('/endCall', function(req, res) {
     var Call = Parse.Object.extend("Call");
     var call = new Call();
     call.set("status",   req.body.DialCallStatus);
-    call.set("from",  req.body.From);
-    call.set("to",  global.queue[from].to);
+
+    var user = new Parse.User();
+    user.id = global.queue[req.body.From].id;
+
+    call.set("from",  user);
+    call.set("to",  global.queue[req.body.From].to);
+
     call.set("fromCountry",  req.body.fromCountry);
     call.set("toCountry",  req.body.toCountry);
     call.set("callSid", req.body.CallSid);
+    call.set("deleted", false);
 
     call.save(null, {
         success: function(call) {
             // Execute any logic that should take place after the object is saved.
             console.log("[CALL]     saved 0K");
             try{
-                global.queue[from] = undefined;
+                global.queue[req.body.From] = undefined;
             }catch(e){
                 console.log(e);
-                console.log("[ERROR]    "+from+"not dequeued");
+                console.log("[ERROR]    "+req.body.From+"not dequeued");
             }
             res.status(200).end();
         },
@@ -87,10 +93,10 @@ router.post('/endCall', function(req, res) {
             // error is a Parse.Error with an error code and message.
             console.log("[ERROR]     not saved");
             try{
-                global.queue[from] = undefined;
+                global.queue[req.body.From] = undefined;
             }catch(e){
                 console.log(e);
-                console.log("[ERROR]    "+from+"not dequeued");
+                console.log("[ERROR]    "+req.body.From+"not dequeued");
             }
             res.status(200).end();
         }
