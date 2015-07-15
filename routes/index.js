@@ -63,7 +63,7 @@ router.post('/makeCall', function(request, response) {
 router.post('/endCall', function(req, res) {
     console.log("[CALL]     ended");
 
-    var User = Parse.Object.extend("User");
+    var User = Parse.Object.extend("_User");
     var query = new Parse.Query(User);
     query.equalTo("objectId", global.queue[req.body.From].id);
     console.log("userId: " + global.queue[req.body.From].id);
