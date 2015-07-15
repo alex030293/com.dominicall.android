@@ -17,6 +17,8 @@ router.post('/call', function(request, response) {
     var from = request.body.From;
     var to = request.body.To;
 
+
+
     if(global.queue[from]){
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
