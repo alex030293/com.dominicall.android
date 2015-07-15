@@ -94,6 +94,7 @@ router.post('/endCall', function(req, res) {
             // Execute any logic that should take place if the save fails.
             // error is a Parse.Error with an error code and message.
             console.log("[ERROR]     not saved");
+            console.log(error);
             try{
                 global.queue[req.body.From] = undefined;
             }catch(e){
