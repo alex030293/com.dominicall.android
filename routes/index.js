@@ -63,49 +63,48 @@ router.post('/makeCall', function(request, response) {
 router.post('/endCall', function(req, res) {
     console.log("[CALL] ended");
 
-    var Call = Parse.Object.extend("Call");
-    var call = new Call();
+    var User = Parse.Object.extend("User");
+    var query = new Parse.Query(User);
+    query.equalTo("objectId", global.queue[req.body.From].id);
+    query.find().then(function(results) {
+        var Call = Parse.Object.extend("Call");
+        var call = new Call();
+        call.set("status",   req.body.DialCallStatus);
+        call.set("to",  global.queue[req.body.From].to);
+        call.set("fromCountry",  req.body.fromCountry);
+        call.set("toCountry",  req.body.toCountry);
+        call.set("callSid", req.body.CallSid);
+        call.set("deleted", false);
+        call.set("from",  results[0]);
 
-    call.set("status",   req.body.DialCallStatus);
-    call.set("to",  global.queue[req.body.From].to);
-    call.set("fromCountry",  req.body.fromCountry);
-    call.set("toCountry",  req.body.toCountry);
-    call.set("callSid", req.body.CallSid);
-    call.set("deleted", false);
-
-    console.log("doing user");
-    var user = new Parse.User();
-    user.id = global.queue[req.body.From].id;
-    call.set("from",  user);
-
-    console.log("done user");
-    call.save(null, {
-        success: function(call) {
-            // Execute any logic that should take place after the object is saved.
-            console.log("[CALL]     saved 0K");
-            try{
-                global.queue[req.body.From] = undefined;
-            }catch(e){
-                console.log(e);
-                console.log("[ERROR]    "+req.body.From+"not dequeued");
+        call.save(null, {
+            success: function(call) {
+                // Execute any logic that should take place after the object is saved.
+                console.log("[CALL]     saved 0K");
+                try{
+                    global.queue[req.body.From] = undefined;
+                }catch(e){
+                    console.log(e);
+                    console.log("[ERROR]    "+req.body.From+"not dequeued");
+                }
+                console.log('------------------------------------------------------------------------------\n');
+                res.status(200).end();
+            },
+            error: function(call, error) {
+                // Execute any logic that should take place if the save fails.
+                // error is a Parse.Error with an error code and message.
+                console.log("[ERROR]     not saved");
+                console.log(error);
+                try{
+                    global.queue[req.body.From] = undefined;
+                }catch(e){
+                    console.log(e);
+                    console.log("[ERROR]    "+req.body.From+"not dequeued");
+                }
+                console.log('------------------------------------------------------------------------------\n');
+                res.status(200).end();
             }
-            console.log('------------------------------------------------------------------------------\n');
-            res.status(200).end();
-        },
-        error: function(call, error) {
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            console.log("[ERROR]     not saved");
-            console.log(error);
-            try{
-                global.queue[req.body.From] = undefined;
-            }catch(e){
-                console.log(e);
-                console.log("[ERROR]    "+req.body.From+"not dequeued");
-            }
-            console.log('------------------------------------------------------------------------------\n');
-            res.status(200).end();
-        }
+        });
     });
 
 });
