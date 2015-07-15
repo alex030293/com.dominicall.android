@@ -21,8 +21,6 @@ router.post('/enqueue',  function(req, res) {
         to: to
     };
 
-    console.log(global.queue);
-
     (global.queue[from])
     ? res.status(200).send("[ENQUEUED]    "+from+" -> "+ to+" (userId: "+userId+")\n").end()
     : res.status(500).send("[ERROR]    "+from+" -> "+ to+" (userId: "+userId+")\n").end();
