@@ -76,6 +76,7 @@ router.post('/endCall', function(req, res) {
     call.set("callSid", req.body.CallSid);
     call.set("deleted", false);
 
+
     call.save(null, {
         success: function(call) {
             // Execute any logic that should take place after the object is saved.
