@@ -80,7 +80,7 @@ router.post('/endCall', function(req, res) {
         call.set("callSid", req.body.CallSid);
         call.set("deleted", false);
         call.set("from",  results[0]);
-        call.set("duration", req.body.DialCallDuration);
+        call.set("duration",req.body.DialCallDuration);
         call.setACL(new Parse.ACL(results[0]));
 
         call.save(null, {
