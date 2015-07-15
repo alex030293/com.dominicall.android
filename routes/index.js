@@ -22,15 +22,8 @@ router.post('/call', function(request, response) {
     if(global.queue[from]){
         console.log("[QUEUE]    found call in queue:");
         console.log(global.queue[from]);
-        var queueTo = global.queue[from].to;
-        try{
-            global.queue[from] = undefined;
-        }catch(e){
-            console.log(e);
-            console.log("[ERROR]    "+from+"not dequeued");
-        }
-        console.log('[CALL] - ' + from + ' -> ' + queueTo);
-        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');
+        console.log('[CALL] - ' + from + ' -> ' + global.queue[from].to);
+        response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial action="/endCall" timeout="20" record="false" callerId="'+from+'">'+ global.queue[from].to +'</Dial></Response>');
     }else {
 
         console.log('[CALL] - ' + from + ' -> ' + to);
@@ -65,10 +58,44 @@ router.post('/makeCall', function(request, response) {
     }
 });
 
-router.post('/endCall', function(request, response) {
+router.post('/endCall', function(req, res) {
     console.log("[CALL] ended");
-    console.log(request.body);
-    response.status(200).end();
+
+    var Call = Parse.Object.extend("Call");
+    var call = new Call();
+    call.set("status",   req.body.DialCallStatus);
+    call.set("from",  req.body.From);
+    call.set("to",  global.queue[from].to);
+    call.set("fromCountry",  req.body.fromCountry);
+    call.set("toCountry",  req.body.toCountry);
+    call.set("callSid", req.body.CallSid);
+
+    call.save(null, {
+        success: function(call) {
+            // Execute any logic that should take place after the object is saved.
+            console.log("[CALL]     saved 0K");
+            try{
+                global.queue[from] = undefined;
+            }catch(e){
+                console.log(e);
+                console.log("[ERROR]    "+from+"not dequeued");
+            }
+            res.status(200).end();
+        },
+        error: function(call, error) {
+            // Execute any logic that should take place if the save fails.
+            // error is a Parse.Error with an error code and message.
+            console.log("[ERROR]     not saved");
+            try{
+                global.queue[from] = undefined;
+            }catch(e){
+                console.log(e);
+                console.log("[ERROR]    "+from+"not dequeued");
+            }
+            res.status(200).end();
+        }
+    });
+
 });
 
 module.exports = router;
