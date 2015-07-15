@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
+//DAO
+var callDAO = require('./../../../lib/model/callDAO');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    res.send('dominicall API :)');
+    res.status(501).send('dominicall API :)');
 });
 
 //Android endpoint
@@ -19,7 +22,11 @@ router.post('/enqueue',  function(req, res) {
     };
 
     console.log(global.queue);
-    res.send("[ENQUEUED]    "+from+" -> "+ to+" (userId: "+userId+")\n").end();
+
+    (global.queue[from])
+    ? res.status(200).send("[ENQUEUED]    "+from+" -> "+ to+" (userId: "+userId+")\n").end()
+    : res.status(500).send("[ERROR]    "+from+" -> "+ to+" (userId: "+userId+")\n").end();
+
 });
 
 module.exports = router;

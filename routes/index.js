@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var config = require('./api/0.1/config');
+var config = require('./../config');
 
 // Configure appplication routes
 
@@ -25,6 +25,7 @@ router.post('/call', function(request, response) {
             global.queue[from] = undefined;
         }catch(e){
             console.log(e);
+            console.log("[ERROR]    "+from+"not dequeued");
         }
         console.log('[CALL] - ' + from + ' -> ' + queueTo);
         response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Dial timeout="20" record="false" callerId="'+from+'">'+ queueTo +'</Dial></Response>');

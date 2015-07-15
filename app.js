@@ -3,12 +3,17 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var Parse = require('parse').Parse;
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api/0.1/call');
+var config = require('./config');
 
+//Globals
 global.queue = {};
+
+//SDKs init
+Parse.initialize(config.Parse.applicationID, config.Parse.javaScriptKey);
 
 var app = express();
 
