@@ -66,16 +66,20 @@ router.post('/endCall', function(req, res) {
     var User = Parse.Object.extend("User");
     var query = new Parse.Query(User);
     query.equalTo("objectId", global.queue[req.body.From].id);
+    console.log("userId: " + global.queue[req.body.From].id);
     query.find().then(function(results) {
+        console.log("Res:");
+        console.log(results[0]);
         var Call = Parse.Object.extend("Call");
         var call = new Call();
         call.set("status",   req.body.DialCallStatus);
         call.set("to",  global.queue[req.body.From].to);
-        call.set("fromCountry",  req.body.fromCountry);
-        call.set("toCountry",  req.body.toCountry);
+        call.set("fromCountry",  req.body.FromCountry);
+        call.set("toCountry",  req.body.ToCountry);
         call.set("callSid", req.body.CallSid);
         call.set("deleted", false);
         call.set("from",  results[0]);
+        user.setACL(new Parse.ACL(results[0]));
 
         call.save(null, {
             success: function(call) {
