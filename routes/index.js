@@ -91,7 +91,7 @@ router.post('/endCall', function(req, res) {
                     console.log("[ERROR]    "+req.body.From+"not dequeued");
                 }
                 console.log('------------------------------------------------------------------------------\n');
-                res.status(200).end();
+                res.status(200).send('<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>');
             },
             error: function(call, error) {
                 // Execute any logic that should take place if the save fails.
@@ -105,7 +105,7 @@ router.post('/endCall', function(req, res) {
                     console.log("[ERROR]    "+req.body.From+"not dequeued");
                 }
                 console.log('------------------------------------------------------------------------------\n');
-                res.status(200).end();
+                res.status(200).send('<?xml version="1.0" encoding="UTF-8"?><Response><Hangup/></Response>');
             }
         });
     });
