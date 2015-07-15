@@ -14,6 +14,7 @@ router.get('/', function(request, response) {
 
 // Handle an AJAX POST request to place an outbound call
 router.post('/call', function(request, response) {
+    console.log('------------------------------------------------------------------------------');
     fromNumber = request.body.From;
     var from = request.body.From;
     var to = request.body.To;
@@ -88,6 +89,7 @@ router.post('/endCall', function(req, res) {
                 console.log(e);
                 console.log("[ERROR]    "+req.body.From+"not dequeued");
             }
+            console.log('------------------------------------------------------------------------------\n');
             res.status(200).end();
         },
         error: function(call, error) {
@@ -101,6 +103,7 @@ router.post('/endCall', function(req, res) {
                 console.log(e);
                 console.log("[ERROR]    "+req.body.From+"not dequeued");
             }
+            console.log('------------------------------------------------------------------------------\n');
             res.status(200).end();
         }
     });
