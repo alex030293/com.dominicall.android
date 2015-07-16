@@ -109,4 +109,10 @@ router.post('/endCall', function(req, res) {
 
 });
 
+//Error fallback
+router.post('/call', function(request, response) {
+    response.send('<?xml version="1.0" encoding="UTF-8"?><Response><Say voice="woman" language="es-es">Se ha producido un error, inténtalo de nuevo.</Say></Response>');
+
+});
+
 module.exports = router;
