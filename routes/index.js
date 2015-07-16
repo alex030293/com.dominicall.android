@@ -3,8 +3,6 @@ var router = express.Router();
 var config = require('./../config');
 var Parse = require('parse').Parse;
 
-// Configure appplication routes
-
 //Remove globals, send number in post
 var fromNumber;
 
