@@ -67,7 +67,6 @@ router.post('/endCall', function(req, res) {
     query.equalTo("objectId", global.queue[req.body.From].userId);
     console.log("userId: " + global.queue[req.body.From].userId);
     query.find().then(function(results) {
-        console.log("Res:");
         var Call = Parse.Object.extend("Call");
         var call = new Call();
         call.set("status",   req.body.DialCallStatus);
